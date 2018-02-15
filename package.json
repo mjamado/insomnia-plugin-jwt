@@ -1,0 +1,27 @@
+{
+  "name": "insomna-plugin-jwtcreator",
+  "description": "Generate JSON Web Token with HS256 signature",
+  "version": "1.0.0",
+  "main": "plugin.js",
+  "author": {
+    "name": "Marco Amado",
+    "email": "mjamado@dreamsincode.com",
+    "url": "http://www.dreamsincode.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mjamado/insomnia-plugin-jwt"
+  },
+  "license": "LGPL-3.0-or-later",
+  "insomnia": {
+    "name": "jwtCreator",
+    "description": "Creates JWT"
+  },
+  "dependencies": {
+    "jsonwebtoken": "^8.1.1",
+    "uuid": "^3.2.1"
+  },
+  "devDependencies": {
+    "eslint": "^4.17.0"
+  }
+}
