@@ -1,5 +1,5 @@
 {
-  "name": "insomna-plugin-jwtcreator",
+  "name": "insomnia-plugin-jwtcreator",
   "description": "Generate JSON Web Token with HS256 signature",
   "version": "1.0.0",
   "main": "plugin.js",
