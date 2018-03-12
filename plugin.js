@@ -62,7 +62,7 @@ module.exports.templateTags = [{
     }
 
     if (!!exp) {
-      payload.exp = Math.round(Date.now() / 100) + exp;
+      payload.exp = Math.round(Date.now() / 1000) + exp;
     }
 
     if (jti !== 'no') {
