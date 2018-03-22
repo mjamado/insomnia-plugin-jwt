@@ -5,7 +5,7 @@ creation of JSON Web Tokens.
 
 ## Instalation
 
-Install the `insomnia-plugin-jwt` plugin from Preferences > Plugins.
+Install the `insomnia-plugin-jwtcreator` plugin from Preferences > Plugins.
 
 ## Usage
 
