@@ -1,7 +1,7 @@
 {
   "name": "insomnia-plugin-jwtcreator",
   "description": "Generate JSON Web Token with HS256 signature",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "main": "plugin.js",
   "author": {
     "name": "Marco Amado",
