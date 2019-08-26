@@ -22,6 +22,11 @@ module.exports.templateTags = [{
       defaultValue: '',
     },
     {
+      displayName: 'Not Before time in seconds from now (nbf)',
+      type: 'number',
+      defaultValue: 0,
+    },
+    {
       displayName: 'Expiration time in seconds from now (exp)',
       type: 'number',
       defaultValue: 10,
@@ -46,7 +51,8 @@ module.exports.templateTags = [{
       defaultValue: '',
     },
   ],
-  async run (context, iss, sub, aud, exp, jti, more, secret) {
+  async run (context, iss, sub, aud, nbf, exp, jti, more, secret) {
+    const now = Math.round(Date.now() / 1000);
     const payload = JSON.parse(more); // may throw error
 
     if (!!iss) {
@@ -61,8 +67,12 @@ module.exports.templateTags = [{
       payload.aud = aud;
     }
 
+    if (!!nbf) {
+      payload.nbf = now + nbf;
+    }
+
     if (!!exp) {
-      payload.exp = Math.round(Date.now() / 1000) + exp;
+      payload.exp = now + exp;
     }
 
     if (jti !== 'no') {
