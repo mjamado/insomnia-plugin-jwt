@@ -19,9 +19,9 @@
   },
   "dependencies": {
     "jsonwebtoken": "^8.5.1",
-    "uuid": "^3.3"
+    "uuid": "^3.3.3"
   },
   "devDependencies": {
-    "eslint": "^6.0"
+    "eslint": "^6.2.2"
   }
 }
