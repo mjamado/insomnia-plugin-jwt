@@ -51,27 +51,27 @@ module.exports.templateTags = [{
       defaultValue: '',
     },
   ],
-  async run (context, iss, sub, aud, nbf, exp, jti, more, secret) {
+  async run(context, iss, sub, aud, nbf, exp, jti, more, secret) {
     const now = Math.round(Date.now() / 1000);
     const payload = JSON.parse(more); // may throw error
 
-    if (!!iss) {
+    if (iss) {
       payload.iss = iss;
     }
 
-    if (!!sub) {
+    if (sub) {
       payload.sub = sub;
     }
 
-    if (!!aud) {
+    if (aud) {
       payload.aud = aud;
     }
 
-    if (!!nbf) {
+    if (nbf) {
       payload.nbf = now + nbf;
     }
 
-    if (!!exp) {
+    if (exp) {
       payload.exp = now + exp;
     }
 
@@ -80,5 +80,5 @@ module.exports.templateTags = [{
     }
 
     return jwt.sign(payload, secret);
-  }
+  },
 }];
