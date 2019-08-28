@@ -44,6 +44,7 @@ module.exports.templateTags = [{
       displayName: 'Private claims (JSON format)',
       type: 'string',
       defaultValue: '{}',
+      encoding: 'base64',
     },
     {
       displayName: 'Secret for HS256',
