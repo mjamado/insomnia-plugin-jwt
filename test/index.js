@@ -6,8 +6,8 @@ const secret = 'leSecret';
 
 describe('Test plugin', () => {
   it('Generates bare token', (done) => {
-    // (context, iss, sub, aud, nbf, exp, jti, more, secret)
-    plugin.run(null, '', '', '', '', '', '', '{}', secret)
+    // (context, algorithm, iss, sub, aud, nbf, exp, jti, more, secret)
+    plugin.run(null, 'HS256', '', '', '', '', '', '', '{}', secret)
       .then((token) => {
         const decodedToken = jwt.verify(token, secret);
         assert.property(decodedToken, 'iat');
@@ -18,9 +18,9 @@ describe('Test plugin', () => {
   });
 
   it('Generates with custom payload', (done) => {
-    plugin.run(null, '', '', '', '', '', '', '{"test": "test"}', secret)
+    plugin.run(null, 'HS256', '', '', '', '', '', '', '{"test": "test"}', secret)
       .then((token) => {
-        const decodedToken = jwt.verify(token, secret);
+        const decodedToken = jwt.verify(token, secret, { algorithms: ["HS256"] });
         assert.property(decodedToken, 'iat');
         assert.isAtLeast(decodedToken.iat, Math.floor(Date.now() / 1000));
         assert.property(decodedToken, 'test');
