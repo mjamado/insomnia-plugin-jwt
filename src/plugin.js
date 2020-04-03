@@ -4,8 +4,27 @@ const uuidv4 = require('uuid/v4');
 module.exports.templateTags = [{
   name: 'jwtCreate',
   displayName: 'JSON Web Token Creator',
-  description: 'Generate JSON Web Token with HS256 signature',
+  description: 'Generate JSON Web Token with signature',
   args: [
+    {
+      displayName: 'Algorithm',
+      type: 'enum',
+      defaultValue: 'HS256',
+      options: [
+        { displayName: 'HS256', value: 'HS256', description: 'HMAC using SHA-256 hash algorithm' },
+        { displayName: 'HS384', value: 'HS384', description: 'HMAC using SHA-384 hash algorithm' },
+        { displayName: 'HS512', value: 'HS512', description: 'HMAC using SHA-512 hash algorithm' },
+        { displayName: 'RS256', value: 'RS256', description: 'RSASSA-PKCS1-v1_5 using SHA-256 hash algorithm' },
+        { displayName: 'RS384', value: 'RS384', description: 'RSASSA-PKCS1-v1_5 using SHA-384 hash algorithm' },
+        { displayName: 'RS512', value: 'RS512', description: 'RSASSA-PKCS1-v1_5 using SHA-512 hash algorithm' },
+        { displayName: 'PS256', value: 'PS256', description: 'RSASSA-PSS using SHA-256 hash algorithm' },
+        { displayName: 'PS384', value: 'PS384', description: 'RSASSA-PSS using SHA-384 hash algorithm' },
+        { displayName: 'ES256', value: 'ES256', description: 'ECDSA using P-256 curve and SHA-256 hash algorithm' },
+        { displayName: 'ES384', value: 'ES384', description: 'ECDSA using P-384 curve and SHA-384 hash algorithm' },
+        { displayName: 'ES512', value: 'ES512', description: 'ECDSA using P-521 curve and SHA-512 hash algorithm' },
+        { displayName: 'none', value: 'none', description: 'No digital signature or MAC value included' },
+      ],
+    },
     {
       displayName: 'Issuer (iss)',
       type: 'string',
@@ -47,12 +66,12 @@ module.exports.templateTags = [{
       encoding: 'base64',
     },
     {
-      displayName: 'Secret for HS256',
+      displayName: 'Secret',
       type: 'string',
       defaultValue: '',
     },
   ],
-  async run(context, iss, sub, aud, nbf, exp, jti, more, secret) {
+  async run(context, algorithm, iss, sub, aud, nbf, exp, jti, more, secret) {
     const now = Math.round(Date.now() / 1000);
     const payload = JSON.parse(more); // may throw error
 
@@ -80,6 +99,6 @@ module.exports.templateTags = [{
       payload.jti = uuidv4();
     }
 
-    return jwt.sign(payload, secret);
+    return jwt.sign(payload, secret, { algorithm });
   },
 }];
