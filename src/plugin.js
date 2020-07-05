@@ -1,3 +1,4 @@
+const fs = require('fs');
 const jwt = require('jsonwebtoken');
 const { v4: uuidv4 } = require('uuid');
 
@@ -70,8 +71,13 @@ module.exports.templateTags = [{
       type: 'string',
       defaultValue: '',
     },
+    {
+      displayName: 'Private Key File Path (has precedence over "Secret")',
+      type: 'string',
+      defaultValue: '',
+    },
   ],
-  async run(context, algorithm, iss, sub, aud, nbf, exp, jti, more, secret) {
+  async run(context, algorithm, iss, sub, aud, nbf, exp, jti, more, secret, privateKey) {
     const now = Math.round(Date.now() / 1000);
     const payload = JSON.parse(more); // may throw error
 
@@ -97,6 +103,10 @@ module.exports.templateTags = [{
 
     if (jti !== 'no') {
       payload.jti = uuidv4();
+    }
+
+    if (privateKey) {
+      secret = fs.readFileSync(privateKey);
     }
 
     return jwt.sign(payload, secret, { algorithm });
