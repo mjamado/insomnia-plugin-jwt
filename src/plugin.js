@@ -67,6 +67,11 @@ module.exports.templateTags = [{
       encoding: 'base64',
     },
     {
+      displayName: 'Header (JSON format)',
+      type: 'string',
+      defaultValue: '{}',
+    },
+    {
       displayName: 'Secret',
       type: 'string',
       defaultValue: '',
@@ -77,9 +82,10 @@ module.exports.templateTags = [{
       defaultValue: '',
     },
   ],
-  async run(context, algorithm, iss, sub, aud, nbf, exp, jti, more, secret, privateKey) {
+  async run(context, algorithm, iss, sub, aud, nbf, exp, jti, payloadJson, headerJson, secret, privateKey) {
     const now = Math.round(Date.now() / 1000);
-    const payload = JSON.parse(more); // may throw error
+    const payload = JSON.parse(payloadJson); // may throw error
+    const header = JSON.parse(headerJson) // may throw error
 
     if (iss) {
       payload.iss = iss;
@@ -109,6 +115,6 @@ module.exports.templateTags = [{
       secret = fs.readFileSync(privateKey);
     }
 
-    return jwt.sign(payload, secret, { algorithm });
+    return jwt.sign(payload, secret, { algorithm, header });
   },
 }];
