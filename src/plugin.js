@@ -1,3 +1,4 @@
+const fs = require('fs');
 const jwt = require('jsonwebtoken');
 const { v4: uuidv4 } = require('uuid');
 
@@ -66,14 +67,25 @@ module.exports.templateTags = [{
       encoding: 'base64',
     },
     {
+      displayName: 'Header (JSON format)',
+      type: 'string',
+      defaultValue: '{}',
+    },
+    {
       displayName: 'Secret',
       type: 'string',
       defaultValue: '',
     },
+    {
+      displayName: 'Private Key File Path (has precedence over "Secret")',
+      type: 'string',
+      defaultValue: '',
+    },
   ],
-  async run(context, algorithm, iss, sub, aud, nbf, exp, jti, more, secret) {
+  async run(context, algorithm, iss, sub, aud, nbf, exp, jti, payloadJson, headerJson, secret, privateKey) {
     const now = Math.round(Date.now() / 1000);
-    const payload = JSON.parse(more); // may throw error
+    const payload = JSON.parse(payloadJson); // may throw error
+    const header = JSON.parse(headerJson) // may throw error
 
     if (iss) {
       payload.iss = iss;
@@ -99,6 +111,10 @@ module.exports.templateTags = [{
       payload.jti = uuidv4();
     }
 
-    return jwt.sign(payload, secret, { algorithm });
+    if (privateKey) {
+      secret = fs.readFileSync(privateKey);
+    }
+
+    return jwt.sign(payload, secret, { algorithm, header });
   },
 }];
