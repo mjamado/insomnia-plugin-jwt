@@ -82,10 +82,29 @@ module.exports.templateTags = [{
       defaultValue: '',
     },
   ],
-  async run(context, algorithm, iss, sub, aud, nbf, exp, jti, payloadJson, headerJson, secret, privateKey) {
+  async run(
+    context,
+    algorithm,
+    iss,
+    sub,
+    aud,
+    nbf,
+    exp,
+    jti,
+    more,
+    secret,
+    headerJson,
+    privateKey,
+  ) {
     const now = Math.round(Date.now() / 1000);
-    const payload = JSON.parse(payloadJson); // may throw error
-    const header = JSON.parse(headerJson) // may throw error
+    const payload = JSON.parse(more); // may throw error
+    let header;
+
+    try {
+      header = JSON.parse(headerJson);
+    } catch (ex) {
+      header = {};
+    }
 
     if (iss) {
       payload.iss = iss;
@@ -112,7 +131,9 @@ module.exports.templateTags = [{
     }
 
     if (privateKey) {
-      secret = fs.readFileSync(privateKey);
+      const privateKeyContent = fs.readFileSync(privateKey);
+
+      return jwt.sign(payload, privateKeyContent, { algorithm, header });
     }
 
     return jwt.sign(payload, secret, { algorithm, header });
