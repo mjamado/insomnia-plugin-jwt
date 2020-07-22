@@ -130,7 +130,7 @@ module.exports.templateTags = [{
       payload.jti = uuidv4();
     }
 
-    if (privateKey) {
+    if (privateKey !== '') {
       const privateKeyContent = fs.readFileSync(privateKey);
 
       return jwt.sign(payload, privateKeyContent, { algorithm, header });
