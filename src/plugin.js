@@ -67,14 +67,14 @@ module.exports.templateTags = [{
       encoding: 'base64',
     },
     {
-      displayName: 'Header (JSON format)',
-      type: 'string',
-      defaultValue: '{}',
-    },
-    {
       displayName: 'Secret',
       type: 'string',
       defaultValue: '',
+    },
+    {
+      displayName: 'Header (JSON format)',
+      type: 'string',
+      defaultValue: '{}',
     },
     {
       displayName: 'Private Key File Path (has precedence over "Secret")',
