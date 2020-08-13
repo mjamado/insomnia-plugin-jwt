@@ -81,6 +81,15 @@ module.exports.templateTags = [{
       type: 'string',
       defaultValue: '',
     },
+    {
+      displayName: 'Secret encoding',
+      type: 'enum',
+      defaultValue: 'UTF-8',
+      options: [
+        { displayName: 'UTF-8', value: 'UTF8' },
+        { displayName: 'Base64', value: 'Base64' },
+      ],
+    },
   ],
   async run(
     context,
@@ -91,13 +100,14 @@ module.exports.templateTags = [{
     nbf,
     exp,
     jti,
-    more,
-    secret,
+    privateClaims,
+    secretStr,
     headerJson,
-    privateKey,
+    privateKeyFilePath,
+    secretEncoding,
   ) {
     const now = Math.round(Date.now() / 1000);
-    const payload = JSON.parse(more); // may throw error
+    const payload = JSON.parse(privateClaims); // may throw error
     let header;
 
     try {
@@ -130,10 +140,12 @@ module.exports.templateTags = [{
       payload.jti = uuidv4();
     }
 
-    if (privateKey) {
-      const privateKeyContent = fs.readFileSync(privateKey);
-
-      return jwt.sign(payload, privateKeyContent, { algorithm, header });
+    let secret = secretStr;
+    if (secretEncoding === 'Base64') {
+      secret = Buffer.from(secretStr, 'base64');
+    }
+    if (privateKeyFilePath) {
+      secret = fs.readFileSync(privateKeyFilePath);
     }
 
     return jwt.sign(payload, secret, { algorithm, header });
