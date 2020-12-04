@@ -52,6 +52,15 @@ module.exports.templateTags = [{
       defaultValue: 10,
     },
     {
+      displayName: 'Generate IAT Timestamp (iat)',
+      type: 'enum',
+      defaultValue: 'no',
+      options: [
+        { displayName: 'No', value: 'no', description: "Don't set IAT timestamp" },
+        { displayName: 'Yes', value: 'yes', description: 'Set IAT timestamp' },
+      ],
+    },
+    {
       displayName: 'JWT ID (jti)',
       type: 'enum',
       defaultValue: 'UUIDv4',
@@ -90,6 +99,7 @@ module.exports.templateTags = [{
     aud,
     nbf,
     exp,
+    iat,
     jti,
     more,
     secret,
@@ -99,6 +109,7 @@ module.exports.templateTags = [{
     const now = Math.round(Date.now() / 1000);
     const payload = JSON.parse(more); // may throw error
     let header;
+    let noTimestamp = true;
 
     try {
       header = JSON.parse(headerJson);
@@ -126,6 +137,10 @@ module.exports.templateTags = [{
       payload.exp = now + exp;
     }
 
+    if (iat === 'yes') {
+      noTimestamp = false;
+    }
+
     if (jti !== 'no') {
       payload.jti = uuidv4();
     }
@@ -133,9 +148,9 @@ module.exports.templateTags = [{
     if (privateKey) {
       const privateKeyContent = fs.readFileSync(privateKey);
 
-      return jwt.sign(payload, privateKeyContent, { algorithm, header });
+      return jwt.sign(payload, privateKeyContent, { algorithm, header, noTimestamp });
     }
 
-    return jwt.sign(payload, secret, { algorithm, header });
+    return jwt.sign(payload, secret, { algorithm, header, noTimestamp });
   },
 }];
