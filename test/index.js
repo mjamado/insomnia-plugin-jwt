@@ -6,8 +6,8 @@ const secret = 'leSecret';
 
 describe('Test plugin', () => {
   it('Generates bare token', (done) => {
-    // (context, algorithm, iss, sub, aud, nbf, exp, iat, jti, more, secret)
-    plugin.run(null, 'HS256', '', '', '', '', '', 'yes', '', '{}', secret)
+    // (context, algorithm, iss, sub, aud, nbf, exp, jti, more, secret, headerJson, iat, privateKey)
+    plugin.run(null, 'HS256', '', '', '', '', '', '', '{}', secret, '{}', '', 'yes')
       .then((token) => {
         const decodedToken = jwt.verify(token, secret);
         assert.property(decodedToken, 'iat');
@@ -18,8 +18,8 @@ describe('Test plugin', () => {
   });
 
   it('Generates bare token without iat', (done) => {
-    // (context, algorithm, iss, sub, aud, nbf, exp, iat, jti, more, secret)
-    plugin.run(null, 'HS256', '', '', '', '', '', 'no', '', '{}', secret)
+    // (context, algorithm, iss, sub, aud, nbf, exp, jti, more, secret, headerJson, iat, privateKey)
+    plugin.run(null, 'HS256', '', '', '', '', '',  '', '{}', secret, '{}', '', 'no')
       .then((token) => {
         const decodedToken = jwt.verify(token, secret);
         assert.notProperty(decodedToken, 'iat');
@@ -28,7 +28,7 @@ describe('Test plugin', () => {
   });
 
   it('Generates with custom payload', (done) => {
-    plugin.run(null, 'HS256', '', '', '', '', '', 'yes', '', '{"test": "test"}', secret)
+    plugin.run(null, 'HS256', '', '', '', '', '', '', '{"test": "test"}', secret, '{}', '', 'yes')
       .then((token) => {
         const decodedToken = jwt.verify(token, secret, { algorithms: ["HS256"] });
         assert.property(decodedToken, 'iat');

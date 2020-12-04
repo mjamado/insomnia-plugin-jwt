@@ -52,15 +52,6 @@ module.exports.templateTags = [{
       defaultValue: 10,
     },
     {
-      displayName: 'Generate IAT Timestamp (iat)',
-      type: 'enum',
-      defaultValue: 'no',
-      options: [
-        { displayName: 'No', value: 'no', description: "Don't set IAT timestamp" },
-        { displayName: 'Yes', value: 'yes', description: 'Set IAT timestamp' },
-      ],
-    },
-    {
       displayName: 'JWT ID (jti)',
       type: 'enum',
       defaultValue: 'UUIDv4',
@@ -90,6 +81,15 @@ module.exports.templateTags = [{
       type: 'string',
       defaultValue: '',
     },
+    {
+      displayName: 'Generate IAT Timestamp (iat)',
+      type: 'enum',
+      defaultValue: 'yes',
+      options: [
+        { displayName: 'No', value: 'no', description: "Don't set IAT timestamp" },
+        { displayName: 'Yes', value: 'yes', description: 'Set IAT timestamp' },
+      ],
+    },
   ],
   async run(
     context,
@@ -99,12 +99,12 @@ module.exports.templateTags = [{
     aud,
     nbf,
     exp,
-    iat,
     jti,
     more,
     secret,
     headerJson,
     privateKey,
+    iat,
   ) {
     const now = Math.round(Date.now() / 1000);
     const payload = JSON.parse(more); // may throw error
