@@ -77,7 +77,12 @@ module.exports.templateTags = [{
       defaultValue: '{}',
     },
     {
-      displayName: 'Private Key File Path (has precedence over "Secret")',
+      displayName: 'Private Key File Path (has precedence over "Secret") In windows you many need double backslashes \\\\',
+      type: 'string',
+      defaultValue: '',
+    },
+    {
+      displayName: 'Passphrase for private key',
       type: 'string',
       defaultValue: '',
     },
@@ -95,6 +100,7 @@ module.exports.templateTags = [{
     secret,
     headerJson,
     privateKey,
+    passphrase,
   ) {
     const now = Math.round(Date.now() / 1000);
     const payload = JSON.parse(more); // may throw error
@@ -132,8 +138,14 @@ module.exports.templateTags = [{
 
     if (privateKey) {
       const privateKeyContent = fs.readFileSync(privateKey);
-
-      return jwt.sign(payload, privateKeyContent, { algorithm, header });
+      var privateObj = {};
+      if(passphrase){
+        privateObj.key = privateKeyContent;
+        privateObj.passphrase = passphrase;
+        return jwt.sign(payload, privateObj, { algorithm, header });
+      }else{
+        return jwt.sign(payload, privateKeyContent, { algorithm, header });
+      }
     }
 
     return jwt.sign(payload, secret, { algorithm, header });
