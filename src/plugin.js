@@ -72,6 +72,11 @@ module.exports.templateTags = [{
       defaultValue: '',
     },
     {
+      displayName: 'Secret base64 encoded?',
+      type: 'boolean',
+      defaultValue: false,
+    },
+    {
       displayName: 'Header (JSON format)',
       type: 'string',
       defaultValue: '{}',
@@ -93,6 +98,7 @@ module.exports.templateTags = [{
     jti,
     more,
     secret,
+    secrectBase64Encoded,
     headerJson,
     privateKey,
   ) {
@@ -136,6 +142,6 @@ module.exports.templateTags = [{
       return jwt.sign(payload, privateKeyContent, { algorithm, header });
     }
 
-    return jwt.sign(payload, secret, { algorithm, header });
+    return jwt.sign(payload, secrectBase64Encoded? Buffer.from( secret, "base64") : secret, { algorithm, header });
   },
 }];
