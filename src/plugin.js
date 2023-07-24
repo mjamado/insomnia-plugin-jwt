@@ -142,6 +142,6 @@ module.exports.templateTags = [{
       return jwt.sign(payload, privateKeyContent, { algorithm, header });
     }
 
-    return jwt.sign(payload, secrectBase64Encoded? Buffer.from( secret, "base64") : secret, { algorithm, header });
+    return jwt.sign(payload, secrectBase64Encoded ? Buffer.from(secret, "base64") : secret, { algorithm, header });
   },
 }];
